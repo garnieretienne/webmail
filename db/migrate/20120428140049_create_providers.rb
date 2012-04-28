@@ -5,8 +5,6 @@ class CreateProviders < ActiveRecord::Migration
       t.string :imap_address, null: false
       t.integer :imap_port, default: 993
       t.boolean :imap_ssl, default: true
-
-      t.timestamps
     end
   end
 end
