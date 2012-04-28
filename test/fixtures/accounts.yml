@@ -1,0 +1,3 @@
+one:
+  email_address: webmail.testing.dev@gmail.com
+  provider: gmail
