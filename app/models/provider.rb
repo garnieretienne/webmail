@@ -19,4 +19,20 @@ class Provider < ActiveRecord::Base
 
   # The Provider name must be unique
   validates :name, uniqueness: true
+
+  # Must analyze the email address and return the good Provider.
+  # If no Provider is found for this email address, must return false.
+  #   account = Account.new(email_address: 'test@gmail.com')
+  #   provider = Provider.find_for test@gmail.com
+  #   if provider
+  #     ... a provider has been found ...
+  #     account.provider = provider
+  #   else
+  #     ... no provider found ...
+  #   end 
+  def self.find_for(email_address)
+  	domain_name = email_address.split('@').last
+  	provider = Provider.find_by_name(domain_name)
+  	return (provider) ? provider : false
+  end
 end

@@ -30,4 +30,13 @@ class ProviderTest < ActiveSupport::TestCase
   	provider2 = Provider.new(name: 'test.com', imap_address: 'imap2.test.com', imap_port: 993, imap_ssl: true)
   	assert !provider2.save, 'this provider is already registered, it must not be saved !'
   end
+
+  test "should find a provider for this email" do
+  	provider = Provider.find_for('test@gmail.com')
+  	assert_equal 'gmail.com', provider.name
+  end
+
+  test "should not find a provider for this email" do
+  	assert !Provider.find_for('test@custom.com')
+  end
 end
