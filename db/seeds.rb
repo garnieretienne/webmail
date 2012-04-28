@@ -1,7 +1,9 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+# Providers
 #
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+# GMail:
+# Official documentation: https://support.google.com/mail/bin/answer.py?hl=fr&answer=78799
+#   Domain name:  gmail.com
+#   IMAP address: imap.gmail.com
+#   IMAP port:    993
+#   IMAP use ssl: true
+Provider.create(name: 'gmail.com', imap_address: 'imap.gmail.com', imap_port: 993, imap_ssl: true)
