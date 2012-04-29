@@ -25,4 +25,16 @@ class AccountTest < ActiveSupport::TestCase
   	account = Account.new(email_address: 'qwerty@gmail.com', provider: Provider.first, password: '1234')
   	assert_equal account.password, '1234'
   end
+
+  test "must authenticate an user" do
+  	account = accounts(:one)
+  	account.password = 'imnotstrong'
+  	assert account.authenticate, "user is not authenticated using the right password"
+  end
+
+  test "must refuse to identicate an user with false credentials" do
+  	account = accounts(:one)
+  	account.password = 'badly'
+  	assert !account.authenticate, "user is authenticated using a bad password"
+  end
 end
