@@ -1,3 +1,18 @@
-// Place all the styles related to the main controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+// Style the login form
+#login-form {
+  margin-top: 2em;
+
+  input[type=text], input[type=password] {
+    display: block;
+    width: 100%;
+    width: 210px; /* value for bootstrap large */
+  }
+  
+  label {
+    display: none;
+  }
+
+  .submit {
+    padding-top: 1em;
+  }
+}

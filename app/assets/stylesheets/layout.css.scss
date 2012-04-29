@@ -1,4 +1,16 @@
 // General layout CSS file
+
+// Style header pannel
 header {
-  margin-bottom: 2em;
+  margin-bottom: 4em;
+}
+
+// Style sub-header using to explain headers
+.sub-header {
+  font-size: 1.2em;
+  color: #999999;
+  margin-bottom: 1.2em;
+  .form-actions {
+    text-align: right;
+  }
 }

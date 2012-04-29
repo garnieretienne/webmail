@@ -1,5 +1,10 @@
+// Load bootstrap
 @import "twitter/bootstrap/bootstrap";
+
+// Add padding to not touch the bottom of screen
 body { padding-top: 1em; }
+
+// Load responsive bootstrap
 @import "twitter/bootstrap/responsive";
 
 // Set the correct sprite paths
@@ -16,13 +21,7 @@ body { padding-top: 1em; }
 // Font Awesome
 @import "fontawesome";
 
-// Your custom LESS stylesheets goes here
-//
-// Since bootstrap was imported above you have access to its mixins which
-// you may use and inherit here
-//
-// If you'd like to override bootstrap's own variables, you can do so here as well
-// See http://twitter.github.com/bootstrap/less.html for their names and documentation
-//
-// Example:
-// @linkColor: #ff0000;
+// Change font to Open Sans
+// see: http://www.google.com/webfonts/specimen/Open+Sans;
+@sansFontFamily: 'Open Sans', sans-serif;
+@baseFontFamily: @sansFontFamily;
