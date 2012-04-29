@@ -40,5 +40,7 @@ gem "haml-rails"
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+group :development do
+  # Debugger for ruby 1.9.3
+  gem 'debugger'
+end
