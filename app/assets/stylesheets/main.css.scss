@@ -5,7 +5,7 @@
   input[type=text], input[type=password] {
     display: block;
     width: 100%;
-    width: 210px; /* value for bootstrap large */
+    max-width: 270px; /* value for bootstrap xlarge */
   }
   
   label {
