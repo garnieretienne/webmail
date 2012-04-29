@@ -9,8 +9,6 @@
 #   imap_port: 993
 #   imap_ssl:  true
 class Provider < ActiveRecord::Base
-  attr_accessible :imap_address, :imap_port, :imap_ssl, :name
-
   # Use Net::IMAP functionnalities
   require 'net/imap'
 

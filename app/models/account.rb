@@ -3,7 +3,7 @@
 # Only the email address is stored in database, the password is a virtual attribute and is 
 # only used to initiate the IMAP connection.
 class Account < ActiveRecord::Base
-  attr_accessible :email_address, :provider, :password
+  attr_accessible :email_address, :provider
 
   # Virtual attribute: password
   attr_accessor :password

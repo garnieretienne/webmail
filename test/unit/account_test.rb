@@ -22,7 +22,8 @@ class AccountTest < ActiveSupport::TestCase
   end
 
   test "password must be a virtual attribute" do
-  	account = Account.new(email_address: 'qwerty@gmail.com', provider: Provider.first, password: '1234')
+  	account = Account.new(email_address: 'qwerty@gmail.com', provider: Provider.first)
+  	account.password = '1234'
   	assert_equal account.password, '1234'
   end
 
