@@ -1,4 +1,11 @@
 Webmail::Application.routes.draw do
+
+  # Authentication
+  match 'login' => 'main#login'
+
+  # Root
+  root to: 'main#login'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

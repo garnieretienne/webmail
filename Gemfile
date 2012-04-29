@@ -22,6 +22,9 @@ end
 
 gem 'jquery-rails'
 
+# Use haml for rails templates
+gem "haml-rails"
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
