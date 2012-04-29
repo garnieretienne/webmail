@@ -18,6 +18,9 @@ group :assets do
   gem 'therubyracer', :platform => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+
+  # Use twitter bootstrap with less
+  gem 'twitter-bootstrap-rails'
 end
 
 gem 'jquery-rails'
