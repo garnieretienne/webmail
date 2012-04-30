@@ -40,6 +40,9 @@ gem "haml-rails"
 # Deploy with Capistrano
 # gem 'capistrano'
 
+# Use backbone
+gem 'backbone-on-rails'
+
 group :development do
   # Debugger for ruby 1.9.3
   gem 'debugger'
