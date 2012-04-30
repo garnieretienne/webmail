@@ -12,11 +12,12 @@ class Account < ActiveRecord::Base
   belongs_to :provider
 
   # The email address and the provider must be specified
-  validates :email_address, :provider_id, presence: true
+  validates :email_address, :provider_id, :password, presence: true
 
   # The email address must be unique and in a good format (user@domain.tld)
-  validates :email_address, uniqueness: true, email_format: true
-
+  validates :email_address, email_format: true
+  validates :email_address, uniqueness: true, on: :create
+  
   # Authenticate an user using his IMAP credentials.
   # Authentication use the 'LOGIN' command to authenticate on the IMAP server.
   # see: http://ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-i-login

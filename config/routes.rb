@@ -1,10 +1,12 @@
 Webmail::Application.routes.draw do
 
   # Authentication
-  match 'login' => 'main#login'
+  get 'login', to: 'sessions#new', as: 'login'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
+  resources :sessions, only: :create
 
   # Root
-  root to: 'main#login'
+  root to: 'sessions#new'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

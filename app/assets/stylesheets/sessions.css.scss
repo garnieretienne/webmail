@@ -1,3 +1,17 @@
-// Place all the styles related to the sessions controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+// Style the login form
+#login-form {
+  margin-top: 2em;
+
+  input[type=text], input[type=password] {
+    width: 100%;
+    max-width: 270px; /* value for bootstrap xlarge */
+  }
+  
+  label {
+    display: none;
+  }
+
+  .submit {
+    padding-top: 1em;
+  }
+}

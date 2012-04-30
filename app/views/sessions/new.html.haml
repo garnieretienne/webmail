@@ -1,0 +1,30 @@
+= content_for :title, "Webmail - Login"
+
+.row-fluid
+  / hack to build fake offset4, not supported in fuild layout
+  / see: https://github.com/twitter/bootstrap/pull/1735
+  .span4 &nbsp;
+  .span4
+    - flash.each do |name, msg|
+      %div{class: "alert alert-#{(name == :notice) ? 'success' : 'error'}"}
+        %a.close{"data-dismiss" => "alert"} ×
+        = msg
+
+    = form_tag(sessions_path, id: "login-form", class: "well") do
+      %h2 Login
+      %p.sub-header Login with your webmail credential.
+      %fieldset
+        %div{class: "control-group #{(!@account.errors[:email_address].empty?) ? 'error' : ''}"}
+          = label_tag :email_address, "Email address", class: "control-label"
+          .controls
+            = text_field_tag :email_address, (@account.email_address) ? @account.email_address : "", placeholder: "user@provider.tld"
+            - if !@account.errors[:email_address].empty?
+              .help-inline= @account.errors[:email_address].first
+        %div{class: "control-group #{(!@account.errors[:password].empty?) ? 'error' : ''}"}
+          = label_tag :password, "Password", class: "control-label"
+          .controls
+            = password_field_tag :password, "", placeholder: "password"
+            - if !@account.errors[:password].empty?
+              .help-inline= @account.errors[:password].first
+      .submit
+        = submit_tag "Login", class: "btn btn-primary", "data-loading-text" => "connecting..."
