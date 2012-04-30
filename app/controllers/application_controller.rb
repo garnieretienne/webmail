@@ -13,4 +13,3 @@ class ApplicationController < ActionController::Base
     redirect_to login_path, alert: "You must be authenticated" if !current_account
   end
 end
-end
