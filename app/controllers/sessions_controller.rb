@@ -114,7 +114,8 @@ class SessionsController < ApplicationController
       end
     end
 
-    redirect_to root_path # TODO: remove this redirection, redirect to mails index
+    # Redirect the user to his account page
+    redirect_to mail_path
   end
 
   # Logout
