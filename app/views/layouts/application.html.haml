@@ -25,6 +25,13 @@
       .row-fluid
         .span12
           = yield
+      - if current_account
+        %footer
+          connected as
+          %strong
+            = current_account.email_address
+          #disconnect-button
+            = link_to "Disconnect", logout_path, class: "btn btn btn-danger btn-mini"
     
     / Javascripts
     = javascript_include_tag "application"
