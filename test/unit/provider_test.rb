@@ -4,14 +4,12 @@ class ProviderTest < ActiveSupport::TestCase
 
   # Helper to create a new provider for testing purpose 
   # without mass assignement security problems.
-  # Use of '(provider.attr) ? provider.attr : settings[:attr]' to keep defauls values assigned 
-  # by migrations files.
   def register_provider(settings)
-  	provider = Provider.new
-  	provider.name = (provider.name) ? provider.name : settings[:name]
-  	provider.imap_address = (provider.imap_address) ? provider.imap_address : settings[:imap_address]
-  	provider.imap_port = (provider.imap_port) ? provider.imap_port : settings[:imap_port]
-  	provider.imap_ssl = (provider.imap_ssl) ? provider.imap_ssl : settings[:imap_ssl]
+  	provider                = Provider.new
+  	provider.name         ||= settings[:name]
+  	provider.imap_address ||= settings[:imap_address]
+  	provider.imap_port    ||= settings[:imap_port]
+  	provider.imap_ssl     ||= settings[:imap_ssl]
   	return provider
   end
 
