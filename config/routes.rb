@@ -3,6 +3,11 @@ Webmail::Application.routes.draw do
   # Backbone app
   get 'mail', to: 'accounts#show', as: 'mail'
 
+  # API
+  namespace :api do
+    resources :mailboxes
+  end
+
   # Authentication
   get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
