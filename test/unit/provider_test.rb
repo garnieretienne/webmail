@@ -53,10 +53,10 @@ class ProviderTest < ActiveSupport::TestCase
   	assert !Provider.find_for('test@custom.com')
   end
 
-  test "should return an IMAP connection" do
-  	connection = Provider.first.connect
-  	assert_equal Net::IMAP, connection.class
-  	connection.logout if connection
+  test "should execute an IMAP session" do
+  	Provider.first.connect do |imap|
+  	  assert_equal Net::IMAP, imap.class
+    end
   end
 
   test "should return an error if the IMAP connection fail" do
@@ -64,6 +64,5 @@ class ProviderTest < ActiveSupport::TestCase
   	provider.imap_address = 'localhost'
   	connection = provider.connect
   	assert !connection, "do not return false on a failed connection"
-  	connection.logout if connection
   end
 end

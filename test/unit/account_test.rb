@@ -38,4 +38,12 @@ class AccountTest < ActiveSupport::TestCase
   	account.password = 'badly'
   	assert !account.authenticate, "user is authenticated using a bad password"
   end
+
+  test "should connect to the account's provider server and authenticate on it" do
+    account = accounts(:one)
+    account.password = 'imnotstrong'
+    account.connect do |imap|
+      assert_equal NET::IMAP, imap.class
+    end
+  end 
 end

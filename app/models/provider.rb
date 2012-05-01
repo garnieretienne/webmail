@@ -41,10 +41,15 @@ class Provider < ActiveRecord::Base
   # On failed connection, do not show an error but return false.
   # see: http://ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-c-new
   #   provider = Provider.new(name: 'gmail', imap_address: 'imap.gmail.com', imap_port: '993', imap_ssl: true)
-  #   connection = provider.connect
+  #   provider.connect do |imap|
+  #     imap.login(email_address, password)
+  #   end
   def connect
   	begin
-  	  return Net::IMAP.new(self.imap_address, port: self.imap_port, ssl: self.imap_ssl)
+      imap = Net::IMAP.new(self.imap_address, port: self.imap_port, ssl: self.imap_ssl)
+      yield imap
+      imap.logout
+      return true
   	rescue
   		return false
   	end

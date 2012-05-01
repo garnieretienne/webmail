@@ -23,17 +23,32 @@ class Account < ActiveRecord::Base
   # see: http://ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-i-login
   # On failed authentication, do not show an error but return false.
   # On successfull authentication, return true and set the session variable 'account'.
+  # TODO: Works better with IMAP and Socket errors:
+  #  - Net::IMAP::NoResponseError (IMAP)
+  #  - Net::IMAP::BadResponseError (IMAP)
+  #  - Net::IMAP::ByeResponseError (IMAP)
+  #  - Errno (Socket)
   def authenticate
-  	connection = self.provider.connect
-  	if connection
-  	  begin
-  	    connection.login(self.email_address, self.password)
-  	    connection.logout
-  	    return true
-  	  rescue Net::IMAP::NoResponseError	
-  	    return false
-      end
+    self.provider.connect do |imap|
+      begin
+        imap.login(self.email_address, self.password)
+        return true
+      rescue Net::IMAP::NoResponseError 
+        return false
+      end  
     end
-    return false
+  end
+
+  # Connect to the account's provider server and authenticate on it.
+  #   account = Account.find_by_email(email_address)
+  #   account.password = password
+  #   account.connect do
+  #     ... do your stuff ...
+  #   end
+  def connect
+    self.provider.connect do |imap|
+      imap.login(self.email_address, self.password)
+      yield imap
+    end
   end
 end
