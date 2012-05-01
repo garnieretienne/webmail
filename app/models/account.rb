@@ -9,7 +9,9 @@ class Account < ActiveRecord::Base
   attr_accessor :password
 
   # An Account belong to one Provider
+  # and own many mailboxes
   belongs_to :provider
+  has_many :mailboxes
 
   # The email address and the provider must be specified
   validates :email_address, :provider_id, :password, presence: true

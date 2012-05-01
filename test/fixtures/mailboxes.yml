@@ -1,0 +1,11 @@
+inbox:
+  name: INBOX
+  delimiter: /
+  flag_attr: Hasnochildren
+  account: one
+
+test:
+  name: Test
+  delimiter: /
+  flag_attr: "Hasnochildren, Noselect"
+  account: one

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120428154557) do
+ActiveRecord::Schema.define(:version => 20120501170146) do
 
   create_table "accounts", :force => true do |t|
     t.string   "email_address", :null => false
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(:version => 20120428154557) do
   end
 
   add_index "accounts", ["email_address"], :name => "index_accounts_on_email_address", :unique => true
+
+  create_table "mailboxes", :force => true do |t|
+    t.string  "name",       :null => false
+    t.string  "delimiter",  :null => false
+    t.string  "flag_attr"
+    t.integer "account_id", :null => false
+  end
+
+  add_index "mailboxes", ["account_id"], :name => "index_mailboxes_on_account_id"
+  add_index "mailboxes", ["name"], :name => "index_mailboxes_on_name"
 
   create_table "providers", :force => true do |t|
     t.string  "name",                           :null => false
