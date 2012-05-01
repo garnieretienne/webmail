@@ -53,4 +53,45 @@ class Account < ActiveRecord::Base
       yield imap
     end
   end
+
+  # Sync all mailboxes from the IMAP server.
+  # All removed mailboxes will be deleted from the cache and
+  # all newly created mailboxes will be added to the cache.
+  # mb           : a Net::IMAP::MailboxList object
+  # mailbox      : a Mailbox object
+  # server_list  : All mailboxes present on the server
+  # client_list  : All mailboxes present on the client
+  # server_names : All mailbox names present on the server
+  # client_names : All mailbox names present on the client
+  def sync
+
+    # Get the server mailboxes list
+    server_list = Array.new
+    self.connect do |imap|
+      imap.list("", "*").each do |mb|
+        server_list << mb
+      end
+    end
+
+    # Get the client mailboxes list
+    client_list = Mailbox.all
+
+    # Delete the old mailboxes no longer on server
+    server_names = server_list.map{|mb| mb.name}
+    client_list.each do |mailbox|
+      mailbox.destroy if !server_names.include? mailbox.name
+    end
+
+    # Cache the new mailboxes
+    client_names = client_list.map{|mailbox| mailbox.name}
+    server_list.each do |mb|
+      if !client_names.include?(mb.name)
+        mailbox = self.mailboxes.new(name: mb.name, delimiter: mb.delim)
+        mailbox.flags = mb.attr
+        mailbox.save
+      end
+    end
+
+    return true
+  end
 end
