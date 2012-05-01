@@ -1,3 +1,7 @@
+# This class is an Active Record object to manage cached mailboxes for accounts.
+# The flags are not stored into their own Active::Record class,
+# They are stored into the 'flag_attr' attribute as a string and 
+# managed with the 'flags', 'flags=' and 'flagged?' functions.
 class Mailbox < ActiveRecord::Base
   attr_accessible :delimiter, :name
 
