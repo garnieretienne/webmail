@@ -18,4 +18,17 @@ class Api::MailboxesControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal "Test", json_response.first['name']
   end
+
+  test "json model should return flags array" do
+    authenticate!
+    xhr :get, :index, format: :json
+    assert_equal ["Hasnochildren", "Noselect"], json_response.first['flags']
+  end
+
+  test "json model shouldnot return flag_attr and account_id" do
+    authenticate!
+    xhr :get, :index, format: :json
+    assert !json_response.first['flag_attr']
+    assert !json_response.first['account_id']
+  end
 end

@@ -39,4 +39,9 @@ class Mailbox < ActiveRecord::Base
   def flagged?(flag)
     self.flags.include? flag
   end
+
+  # Modify the default JSON object
+  def as_json(options = {})
+    super(options.merge(except: [ :account_id, :flag_attr ], :methods => [ :flags ]))
+  end
 end
