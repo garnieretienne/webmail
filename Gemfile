@@ -21,6 +21,9 @@ group :assets do
 
   # Use twitter bootstrap with less
   gem 'twitter-bootstrap-rails'
+
+  # Use haml templating with coffee script for javascript
+  gem 'haml_coffee_assets'
 end
 
 gem 'jquery-rails'

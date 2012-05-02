@@ -1,0 +1,2 @@
+- for mailbox in @mailboxes.models
+  %li= mailbox.get 'name'

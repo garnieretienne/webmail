@@ -1,0 +1,1 @@
+Webmail.Models.Mailbox = Backbone.Model.extend()

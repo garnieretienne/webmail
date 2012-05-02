@@ -3,4 +3,8 @@ window.Webmail =
   Collections: {}
   Views: {}
   Routers: {}
-  init: -> alert 'Hello from Backbone!'
+  init: (data) -> 
+    mailboxes = new Webmail.Collections.Mailboxes(data.mailboxes);
+    new Webmail.Routers.Mailboxes
+      mailboxes: mailboxes
+    Backbone.history.start()

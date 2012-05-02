@@ -1,5 +1,9 @@
 = content_for :title, "Webmail - Mail"
 
+.row-fluid
+  .span2
+    #mailboxes
+
 = content_for :javascript do
   / Init backbone app
-  = init_backbone
+  = init_backbone @mailboxes
