@@ -1,2 +1,3 @@
-- for mailbox in @mailboxes.models
-  %li= mailbox.get 'name'
+- if @mailboxes
+  - for mailbox in @mailboxes.models
+    %li= mailbox.get 'name'
