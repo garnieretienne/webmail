@@ -2,12 +2,12 @@
 
 # List of mailboxes
 mailboxes_sample = [
-  {id: 1, name: "INBOX", flags: ["Hasnochild"], delimiter: "/"}
-  {id: 2, name: "Sent", flags: ["Hasnochild"], delimiter: "/"}
-  {id: 3, name: "Hidden", flags: ["Hasnochild", "Noselect"], delimiter: "/"}
-  {id: 4, name: "Parent", flags: ["Haschild", "Noselect"], delimiter: "/"}
-  {id: 5, name: "Gimap ERROR", flags: ["Haschild", "Hasnochild"], delimiter: "/"}
-  {id: 6, name: "Simple", flags: ["Hasnochild"], delimiter: "/"}
+  {id: 1, name: "INBOX", flags: ["Hasnochildren"], delimiter: "/"}
+  {id: 2, name: "Sent", flags: ["Hasnochildren"], delimiter: "/"}
+  {id: 3, name: "Hidden", flags: ["Hasnochildren", "Noselect"], delimiter: "/"}
+  {id: 4, name: "Parent", flags: ["Haschildren", "Noselect"], delimiter: "/"}
+  {id: 5, name: "Gimap ERROR", flags: ["Haschildren", "Hasnochildren"], delimiter: "/"}
+  {id: 6, name: "Simple", flags: ["Hasnochildren"], delimiter: "/"}
   {id: 7, name: "Parent/Child", flags: [], delimiter: "/"}
 ]
 
@@ -44,14 +44,14 @@ describe "Webmail.Views.MailboxesIndex", ->
     view = new Webmail.Views.MailboxesIndex collection: mailboxes
     view.render()
     mailboxes = _.map view.$el.children("li"), (li) ->
-      $(li).text()
-    expect(mailboxes[0]).toBe('INBOX')
-    expect(mailboxes[1]).toBe('Gimap ERROR')
-    expect(mailboxes[2]).toBe('Hidden')
-    expect(mailboxes[3]).toBe('Parent')
-    expect(mailboxes[4]).toBe('Parent/Child')
-    expect(mailboxes[5]).toBe('Sent')
-    expect(mailboxes[6]).toBe('Simple')
+      $(li)
+    expect(mailboxes[0]).toHaveText /INBOX/
+    expect(mailboxes[1]).toHaveText /Gimap ERROR/
+    expect(mailboxes[2]).toHaveText /Hidden/
+    expect(mailboxes[3]).toHaveText /Parent/
+    expect(mailboxes[4]).toHaveText /Child/
+    expect(mailboxes[5]).toHaveText /Sent/
+    expect(mailboxes[6]).toHaveText /Simple/
 
 
 # Test the mailbox model
@@ -59,19 +59,21 @@ describe "Webmail.Models.Mailbox", ->
 
   it "should return boolean for a flag presence", ->
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
-    expect(mailbox.flagged?("Hasnochild")).toBe true
+    expect(mailbox.flagged?("Hasnochildren")).toBe true
 
   # Test if a mailbox has childs
   # hasChild -> HasChild
   it "should test if a mailbox has childs", ->
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
-    expect(mailbox.hasChild?()).toBe false 
+    expect(mailbox.hasChildren?()).toBe false 
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 4)
-    expect(mailbox.hasChild?()).toBe true
+    expect(mailbox.hasChildren?()).toBe true
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 5)
-    expect(mailbox.hasChild?()).toBe false
+    expect(mailbox.hasChildren?()).toBe false
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 6)
-    expect(mailbox.hasChild?()).toBe false
+    expect(mailbox.hasChildren?()).toBe false
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 7)
+    expect(mailbox.hasChildren?()).toBe false
 
   # Test if a mailbox is selectable
   # selectable -> ! NoSelect
@@ -80,6 +82,21 @@ describe "Webmail.Models.Mailbox", ->
     expect(mailbox.selectable?()).toBe(true)
     mailbox = new Webmail.Models.Mailbox(mailbox_sample 4)
     expect(mailbox.selectable?()).toBe(false)
+
+  # Test if a mailbox has Parent
+  it "should detect if a mailbox has a parent", ->
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
+    expect(mailbox.hasParent?()).toBe(false)
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 7)
+    expect(mailbox.hasParent?()).toBe("Parent")
+
+  # Test the title() function
+  it "should return the mailboxe title", ->
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
+    expect(mailbox.title()).toBe("INBOX")
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 7)
+    expect(mailbox.title()).toBe("Child")
+
 
 # Test the mailbox collection
 describe "Webmail.Collections.Mailboxes", ->

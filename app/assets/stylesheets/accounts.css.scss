@@ -1,11 +1,23 @@
+$font-color: #464646;
+
 #mailboxes {
   font-size: 0.8em;
+  color: transparentize($font-color, 0.4);
+  a {
+    color: $font-color;
+  }
   ul {
     list-style-type: none;
     margin: 0;
     border-right: 1px solid #E4E4E4;
     li {
       padding: 0.2em 0.2em;
+      .dropdown-icon {
+        margin-left: 0.4em;
+      }
+    }
+    li.child {
+      padding-left: 1em;
     }
   }
 }

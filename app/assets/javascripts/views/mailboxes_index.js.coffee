@@ -5,3 +5,4 @@ Webmail.Views.MailboxesIndex = Backbone.View.extend
     this.$el.html JST['mailboxes/index']
       mailboxes: this.collection
     return this
+
