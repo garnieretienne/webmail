@@ -74,7 +74,7 @@ class Account < ActiveRecord::Base
     end
 
     # Get the client mailboxes list
-    client_list = Mailbox.all
+    client_list = self.mailboxes
 
     # Delete the old mailboxes no longer on server
     server_names = server_list.map{|mb| mb.name}
