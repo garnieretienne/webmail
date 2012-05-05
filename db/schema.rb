@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120501170146) do
+ActiveRecord::Schema.define(:version => 20120505150256) do
 
   create_table "accounts", :force => true do |t|
     t.string   "email_address", :null => false
@@ -31,6 +31,21 @@ ActiveRecord::Schema.define(:version => 20120501170146) do
 
   add_index "mailboxes", ["account_id"], :name => "index_mailboxes_on_account_id"
   add_index "mailboxes", ["name"], :name => "index_mailboxes_on_name"
+
+  create_table "messages", :force => true do |t|
+    t.integer  "uid",           :null => false
+    t.string   "subject"
+    t.string   "from_name"
+    t.string   "from_address",  :null => false
+    t.datetime "internal_date", :null => false
+    t.string   "flag_attr"
+    t.integer  "mailbox_id",    :null => false
+  end
+
+  add_index "messages", ["from_address"], :name => "index_messages_on_from_address"
+  add_index "messages", ["mailbox_id"], :name => "index_messages_on_mailbox_id"
+  add_index "messages", ["subject"], :name => "index_messages_on_subject"
+  add_index "messages", ["uid"], :name => "index_messages_on_uid"
 
   create_table "providers", :force => true do |t|
     t.string  "name",                           :null => false
