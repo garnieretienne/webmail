@@ -5,8 +5,10 @@
 class Mailbox < ActiveRecord::Base
   attr_accessible :delimiter, :name
 
-  # A mailbox belongs to an account
+  # A mailbox belongs to an account and
+  # has many messages
   belongs_to :account
+  has_many :messages
 
   # The name, delimiter and account related must be specified
   validates :name, :delimiter, :account_id, presence: true
@@ -17,8 +19,10 @@ class Mailbox < ActiveRecord::Base
   #   end
   def flags
     flags = Array.new
-    self.flag_attr.split(", ").each do |flag|
-      flags << flag.to_sym
+    if self.flag_attr
+      self.flag_attr.split(", ").each do |flag|
+        flags << flag.to_sym
+      end
     end
 
     return flags

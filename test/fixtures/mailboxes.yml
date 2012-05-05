@@ -9,3 +9,9 @@ test:
   delimiter: /
   flag_attr: "Hasnochildren, Noselect"
   account: one
+
+hey:
+  name: hey
+  delimiter: /
+  flag_attr:
+  account: two

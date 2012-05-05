@@ -28,11 +28,15 @@ class MailboxTest < ActiveSupport::TestCase
     assert !mailbox.valid?, "this is valid with no delimiter"
   end
 
-  test "should return an array of symbol flags for a message" do
+  test "should return an array of symbol flags for a mailbox" do
     mailbox = mailboxes(:test)
     assert_equal Array, mailbox.flags.class
     assert_equal 2, mailbox.flags.count
     assert_equal Symbol, mailbox.flags.first.class
+
+    mailbox = mailboxes(:hey)
+    assert_equal Array, mailbox.flags.class
+    assert_equal 0, mailbox.flags.count
   end
 
   test "should not list this inbox (not selectable)" do
