@@ -10,7 +10,7 @@ Goal: User must be able to read his messages accessed throught IMAP on his email
   - user connect with his email service provider's email address and password
   - the email provider technicals (IMAP server, port and other settings) must be retrieved from the domain name used in the given email address
 
-* user must be able to list his mailboxes (traditionnal, and custom mailboxes, not the specials one for now)
+* user must be able to list his mailboxes
   - traditionnal mailboxe: 'INBOX'
   - special mailboxes: 'All Mail', 'Spam'
   - custom mailboxes: mailboxes created by the user himself, like 'Personnal' and 'Work' mailboxes
@@ -23,6 +23,8 @@ Goal: User must be able to read his messages accessed throught IMAP on his email
     * Envelope Structure (message's header)
     * Internal Date (reflect when the message was received)
     * Flags (reflect the message state)
+    * From header field
+    * subject header field
 
 * user must be able to list his messages from any of his mailboxes
   - the message list must be displayed from the cache and the following informations must appear:
@@ -30,6 +32,7 @@ Goal: User must be able to read his messages accessed throught IMAP on his email
     * Subject (the subject of the message)
     * Date (the date the message was received)
   - the list must be ordered by the date (newest message must be displayed first)
+  - Non read messages must be highlighted
   
 * user must be able to read a message when opened it
   - the message content must be loaded from the server and displayed to the user
