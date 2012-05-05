@@ -3,6 +3,9 @@
 # Only the email address is stored in database, the password is a virtual attribute and is 
 # only used to initiate the IMAP connection.
 class Account < ActiveRecord::Base
+  # Use Net::IMAP functionnalities
+  require 'net/imap'
+
   attr_accessible :email_address, :provider
 
   # Virtual attribute: password
@@ -77,7 +80,7 @@ class Account < ActiveRecord::Base
     client_list = self.mailboxes
 
     # Delete the old mailboxes no longer on server
-    server_names = server_list.map{|mb| mb.name}
+    server_names = server_list.map{|mb| Net::IMAP.decode_utf7(mb.name)}
     client_list.each do |mailbox|
       mailbox.destroy if !server_names.include? mailbox.name
     end
@@ -85,8 +88,8 @@ class Account < ActiveRecord::Base
     # Cache the new mailboxes
     client_names = client_list.map{|mailbox| mailbox.name}
     server_list.each do |mb|
-      if !client_names.include?(mb.name)
-        mailbox = self.mailboxes.new(name: mb.name, delimiter: mb.delim)
+      if !client_names.include?(Net::IMAP.decode_utf7(mb.name))
+        mailbox = self.mailboxes.new(name: Net::IMAP.decode_utf7(mb.name), delimiter: mb.delim)
         mailbox.flags = mb.attr
         mailbox.save
       end
