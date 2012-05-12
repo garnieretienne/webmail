@@ -6,5 +6,4 @@ class Api::MailboxesController < ApplicationController
   def index
     respond_with(@mailboxes = current_account.mailboxes.all)
   end
-
 end

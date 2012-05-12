@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::MailboxesControllerTest < ActionController::TestCase
+class Api::MessagesControllerTest < ActionController::TestCase
 
   # Method to simulate the user authentification
   def authenticate!
@@ -12,23 +12,23 @@ class Api::MailboxesControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
-  test "should return a list of mailboxes for this account (in json)" do
+  test "should return a list of messages for the given mailbox (in json)" do
     authenticate!
-    xhr :get, :index, format: :json
+    xhr :get, :index, format: :json, id: mailboxes(:inbox)
     assert_response :success
-    assert_equal "Test", json_response.first['name']
+    assert_equal "webmail@yuweb.fr", json_response.first['from_address']
   end
 
   test "json model should return flags array" do
     authenticate!
-    xhr :get, :index, format: :json
-    assert_equal ["Hasnochildren", "Noselect"], json_response.first['flags']
+    xhr :get, :index, format: :json, id: mailboxes(:inbox)
+    assert_equal ["Recent", "Seen"], json_response.first['flags']
   end
 
   test "json model should not return flag_attr and account_id" do
     authenticate!
-    xhr :get, :index, format: :json
+    xhr :get, :index, format: :json, id: mailboxes(:inbox)
     assert !json_response.first['flag_attr']
-    assert !json_response.first['account_id']
+    assert !json_response.first['mailbox_id']
   end
 end
