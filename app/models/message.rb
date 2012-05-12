@@ -3,13 +3,16 @@
 # They are stored into the 'flag_attr' attribute as a string and 
 # managed with the 'flags', 'flags=' and 'flagged?' functions.
 class Message < ActiveRecord::Base
-  attr_accessible :envelope, :from, :internal_date, :subject, :uid
+  attr_accessible :from_address, :from_name, :internal_date, :subject, :uid
 
   # A message belongs to a mailbox
   belongs_to :mailbox
 
   # The uid, from, internal_date, flag_attr, envelope and related mailbox must be specified
   validates :uid, :from_address, :internal_date, :mailbox_id, presence: true
+
+  # The uid is unique in the account scope
+  validates :uid, uniqueness: {scope: :mailbox_id}
 
   # The email in the from field must be in a good format
   validates :from_address, email_format: true

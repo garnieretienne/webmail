@@ -26,4 +26,55 @@ class ActiveSupport::TestCase
       data
     end
   end
+
+  # Send an email to the given account
+  def new_message(address)
+    subject = Time.now.to_i.to_s
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      status = gmail.deliver do
+        to address
+        subject subject
+        body "Testing ..."
+      end
+      found = []
+      until !found.empty?
+        found = gmail.inbox.find(subject: subject)
+      end
+    end
+    return subject
+  end
+
+  # Read an email on the given account
+  def read_message(address, subject)
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      email = gmail.inbox.find(subject: subject).first
+      email.read!
+    end
+  end
+  
+  # Delete an email on the given account
+  def delete_message(address, subject)
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      email = gmail.inbox.find(subject: subject).first
+      email.delete!
+      found = [""]
+      until found.empty?
+        found = gmail.inbox.find(subject: subject)
+      end
+    end
+  end
+
+  # Create a mailbox on the given account
+  def add_mailbox(address, name)
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      gmail.labels.new(name)
+    end
+  end
+
+  # Delete a mailbox on the given account
+  def delete_mailbox(address, name)
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      gmail.labels.delete(name)
+    end
+  end
 end

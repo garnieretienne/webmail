@@ -50,8 +50,16 @@ class Provider < ActiveRecord::Base
       yield imap
       imap.logout
       return true
-  	rescue
+  	rescue Errno::ECONNREFUSED
   		return false
+    rescue Errno::ETIMEDOUT
+      return false
+    rescue Errno::ENETUNREACH
+      return false
+    rescue SocketError
+      return false
+    rescue Net::IMAP::ByeResponseError
+      return false
   	end
   end
 end

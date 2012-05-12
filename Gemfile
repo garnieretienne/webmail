@@ -19,3 +19,7 @@ group :development do
   gem 'debugger'                                                         # Debugger for ruby 1.9.3
   gem 'jasminerice', git: "git://github.com/bradphelan/jasminerice.git"  # Jasmine + coffee script and assets support
 end
+
+group :test do
+  gem 'gmail'
+end

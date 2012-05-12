@@ -39,6 +39,27 @@ class MessageTest < ActiveSupport::TestCase
     assert !message.valid?, "this is valid with no uid" 
   end
 
+  test "a message uid must be unique" do
+    message = register_message(
+      subject: 'Hello', 
+      uid: "12345",
+      from_address: 'kurt@yuweb.fr', 
+      internal_date: '2012-05-04 17:02:56',
+      flag_attr: [],
+      mailbox: mailboxes(:inbox)
+    )
+    assert message.save, "the first message was not saved"
+    message = register_message(
+      subject: 'Hello', 
+      uid: "12345",
+      from_address: 'kurt@yuweb.fr', 
+      internal_date: '2012-05-04 17:02:56',
+      flag_attr: [],
+      mailbox: mailboxes(:inbox)
+    )
+    assert !message.save, "the same message (same UID) was saved two times"
+  end
+
   test "a message must have a from address field" do
     message = register_message(
       uid: '12345', 

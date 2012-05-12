@@ -14,7 +14,7 @@ class Account < ActiveRecord::Base
   # An Account belong to one Provider
   # and own many mailboxes
   belongs_to :provider
-  has_many :mailboxes
+  has_many :mailboxes, dependent: :destroy
 
   # The email address and the provider must be specified
   validates :email_address, :provider_id, :password, presence: true
@@ -57,44 +57,66 @@ class Account < ActiveRecord::Base
     end
   end
 
-  # Sync all mailboxes from the IMAP server.
+  # Sync all mailboxes and messages from the IMAP server.
   # All removed mailboxes will be deleted from the cache and
   # all newly created mailboxes will be added to the cache.
-  # mb           : a Net::IMAP::MailboxList object
-  # mailbox      : a Mailbox object
-  # server_list  : All mailboxes present on the server
-  # client_list  : All mailboxes present on the client
-  # server_names : All mailbox names present on the server
-  # client_names : All mailbox names present on the client
   def sync
 
-    # Get the server mailboxes list
-    server_list = Array.new
+    # Sync mailboxes
+    self.sync_mailboxes
+    self.reload
+
+    # Sync messages
+    self.mailboxes.each do |mailbox|
+      next if mailbox.flagged? :Noselect
+      mailbox.sync self.password
+    end
+  end
+
+  # Sync the mailbox list
+  def sync_mailboxes
+
+    # Get the server mailboxes list and
+    # build a map of flags
+    mailboxes = Array.new
     self.connect do |imap|
-      imap.list("", "*").each do |mb|
-        server_list << mb
+      imap.list("", "*").each do |mailbox_data|
+        mailboxes << mailbox_data
       end
     end
-
-    # Get the client mailboxes list
-    client_list = self.mailboxes
-
-    # Delete the old mailboxes no longer on server
-    server_names = server_list.map{|mb| Net::IMAP.decode_utf7(mb.name)}
-    client_list.each do |mailbox|
-      mailbox.destroy if !server_names.include? mailbox.name
+    mailboxes_flags = Hash.new
+    mailboxes.each do |mailbox_data|
+      mailboxes_flags[mailbox_data.name] = mailbox_data.attr
     end
 
-    # Cache the new mailboxes
-    client_names = client_list.map{|mailbox| mailbox.name}
-    server_list.each do |mb|
-      if !client_names.include?(Net::IMAP.decode_utf7(mb.name))
-        mailbox = self.mailboxes.new(name: Net::IMAP.decode_utf7(mb.name), delimiter: mb.delim)
-        mailbox.flags = mb.attr
+    # Get the cached mailboxes and
+    # build map of flags
+    cached_mailboxes = self.mailboxes
+    cached_mailboxes_flags = Hash.new
+    cached_mailboxes.each do |mailbox|
+      cached_mailboxes_flags[mailbox.name] = mailbox.flags
+    end
+
+    # Cache the new mailboxes, update mailboxes flags and
+    # delete non longer existing mailboxes from the cache
+    mailboxes.each do |mailbox_data|
+      if !cached_mailboxes_flags[Net::IMAP.decode_utf7(mailbox_data.name)]
+        mailbox = self.mailboxes.new(name: Net::IMAP.decode_utf7(mailbox_data.name), delimiter: mailbox_data.delim)
+        mailbox.flags = mailbox_data.attr
         mailbox.save
       end
     end
 
-    return true
+    # Delete old mailboxes and update flags
+    cached_mailboxes_flags.each do |name, flags|
+      if !mailboxes_flags[Net::IMAP.encode_utf7(name)]
+        mailbox = self.mailboxes.find_by_name(name)
+        mailbox.destroy
+      elsif mailboxes_flags[Net::IMAP.encode_utf7(name)] != flags
+        mailbox = self.mailboxes.find_by_name(name)
+        mailbox.flags = flags
+        mailbox.save
+      end
+    end
   end
 end

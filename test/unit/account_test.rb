@@ -43,15 +43,22 @@ class AccountTest < ActiveSupport::TestCase
     account = accounts(:one)
     account.password = 'imnotstrong'
     account.connect do |imap|
-      assert_equal NET::IMAP, imap.class
+      assert_equal Net::IMAP, imap.class
     end
   end
 
-  test "sync: should sync the mailboxes cache (many new, one deleted)" do
+  test "mailboxes synchronization" do
     account = accounts(:one)
-    account.password = "imnotstrong"
-    assert account.sync
-    assert (account.mailboxes.count > 2), "no mailboxes has been imported"
-    assert !account.mailboxes.find_by_name('test'), "the test mailbox is not present on the server but still exist"
+    account.password = 'imnotstrong'
+
+    # Should add this mailbox into the cache
+    add_mailbox(accounts(:one).email_address, "Testing")
+    account.sync_mailboxes
+    assert_not_nil account.mailboxes.find_by_name("Testing")
+
+    # Should remove this mailbox from the cache
+    delete_mailbox(accounts(:one).email_address, "Testing")
+    account.sync_mailboxes
+    assert_nil account.mailboxes.find_by_name("Testing")
   end
 end
