@@ -75,6 +75,7 @@ class Account < ActiveRecord::Base
 
   # Sync the mailbox list
   def sync_mailboxes
+    self.reload
 
     # Get the server mailboxes list and
     # build a map of flags
