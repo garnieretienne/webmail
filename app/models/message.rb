@@ -59,6 +59,10 @@ class Message < ActiveRecord::Base
   # TODO: this gem show a warning "iconv will be deprecated in the future, use String#encode instead."
   def subject
     subject = self.read_attribute(:subject)
-    Rfc2047.decode subject if subject
+    begin
+      Rfc2047.decode subject if subject
+    rescue Rfc2047::Unparseable
+      return subject
+    end
   end
 end
