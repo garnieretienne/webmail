@@ -7,6 +7,6 @@ class AccountsController < ApplicationController
   # Init the backbone app
   def show
     @mailboxes = current_account.mailboxes
-    @messages = current_account.mailboxes.find_by_name("INBOX").messages
+    @messages = current_account.mailboxes.find_by_name("INBOX").messages.order("uid DESC").limit(50)
   end
 end

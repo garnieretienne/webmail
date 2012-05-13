@@ -1,0 +1,27 @@
+%colgroup
+  %col.from
+  %col.subject
+  %col.date
+%thead
+  %tr
+    %th From
+    %th Subject
+    %th Date
+- if @messages
+  - for message in @messages.models
+    %tr{class: (if message.flagged?('Seen') then '' else 'new')}
+      %td
+        .hide-overflow
+          = message.fromName()
+          %span.from-address
+            = message.get "from_address"
+      %td
+        .hide-overflow
+          - if message.get("subject") == null
+            %span.no-subject= "No subject ..."
+          - else
+            = message.get "subject"
+      %td
+        .hide-overflow
+          = message.shortInternalDate()
+    
