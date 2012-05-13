@@ -17,3 +17,12 @@ two:
   internal_date: 2012-05-05 17:02:56
   flag_attr: "Recent, Seen"
   mailbox: inbox
+
+three:
+  uid: 3
+  subject: =?ISO-8859-1?Q?Encoded_using_RFC2047_@=E9!?=
+  from_address: webmail@yuweb.fr
+  from_name: 
+  internal_date: 2012-05-15 17:02:56
+  flag_attr: "Recent, Seen"
+  mailbox: inbox

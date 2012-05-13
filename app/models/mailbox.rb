@@ -6,7 +6,7 @@ class Mailbox < ActiveRecord::Base
   # Use Net::IMAP functionnalities
   require 'net/imap'
 
-  attr_accessible :delimiter, :name
+  attr_accessible :delimiter, :name, :name_utf7
 
   # A mailbox belongs to an account and
   # has many messages
@@ -76,7 +76,7 @@ class Mailbox < ActiveRecord::Base
     new_messages = nil
     old_messages = nil
     self.account.connect do |imap|
-      imap.select Net::IMAP.encode_utf7(self.name)
+      imap.select self.name_utf7
       new_messages = imap.uid_fetch(last_uid+1..-1, ["UID", "ENVELOPE", "FLAGS", "INTERNALDATE"])
       old_messages = imap.uid_fetch(1..last_uid, ["UID", "FLAGS"]) if last_uid > 0
     end
@@ -128,5 +128,35 @@ class Mailbox < ActiveRecord::Base
         message.save
       end
     end
+  end
+
+  # Overwrite the name attribute getter, decode using utf7
+  # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-c-decode_utf7
+  def name
+    Net::IMAP.decode_utf7 self.read_attribute(:name) if self[:name]
+  end  
+
+  # Overwrite the name attribute setter, encode using utf7
+  # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-c-encode_utf7
+  def name=(name)
+    encoded_name = (name) ? Net::IMAP.encode_utf7(name) : ""
+    write_attribute(:name, encoded_name)
+  end
+
+  # Overwrite the find_by_name method
+  # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/net/imap/rdoc/Net/IMAP.html#method-c-encode_utf7
+  def self.find_by_name(name)
+    encoded_name = Net::IMAP.encode_utf7(name)
+    Mailbox.where(name: encoded_name).first
+  end
+
+  # Return the name encoded in utf7
+  def name_utf7
+    self.read_attribute(:name)
+  end
+
+  # Write a name attribute already encoded in utf7
+  def name_utf7=(name)
+    write_attribute(:name, name)
   end
 end

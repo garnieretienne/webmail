@@ -9,6 +9,8 @@ mailboxes_sample = [
   {id: 5, name: "Gimap ERROR", flags: ["Haschildren", "Hasnochildren"], delimiter: "/"}
   {id: 6, name: "Simple", flags: ["Hasnochildren"], delimiter: "/"}
   {id: 7, name: "Parent/Child", flags: [], delimiter: "/"}
+  {id: 8, name: "a", flags: [], delimiter: "/"}
+
 ]
 
 # One mailbox
@@ -52,6 +54,7 @@ describe "Webmail.Views.MailboxesIndex", ->
     expect(mailboxes[4]).toHaveText /Child/
     expect(mailboxes[5]).toHaveText /Sent/
     expect(mailboxes[6]).toHaveText /Simple/
+    expect(mailboxes[7]).toHaveText /a/
 
 
 # Test the mailbox model

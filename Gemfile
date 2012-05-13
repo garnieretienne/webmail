@@ -4,6 +4,7 @@ gem 'rails', '3.2.3'
 gem 'jquery-rails'
 gem "haml-rails"         # Use haml for rails templates
 gem 'backbone-on-rails'  # Use backbone
+gem 'rfc2047'            # Decode / Encode message header using method described RFC2047
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
@@ -17,7 +18,7 @@ end
 group :development do
   gem 'sqlite3'
   gem 'debugger'                                                         # Debugger for ruby 1.9.3
-  gem 'jasminerice', git: "git://github.com/bradphelan/jasminerice.git"  # Jasmine + coffee script and assets support
+  gem 'jasminerice', git: "git://github.com/bradphelan/jasminerice.git"  # Jasmine with coffee script and assets support
 end
 
 group :test do

@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'test_helper'
 
 class MailboxTest < ActiveSupport::TestCase
@@ -74,5 +75,29 @@ class MailboxTest < ActiveSupport::TestCase
     inbox.sync "imnotstrong"
     message = inbox.messages.find_by_subject(subject)
     assert_nil message, "the message is not deleted"
+  end
+
+  test "should decode the name stored in UTF7" do
+    utf7 = mailboxes(:utf7)
+    assert_equal "Études", utf7.name
+  end
+
+  test "should return the name encoded in utf7" do
+    utf7 = mailboxes(:utf7)
+    assert_equal "&AMk-tudes", utf7.name_utf7
+  end
+
+  test "should store the given name in UTF7" do
+    utf7 = mailboxes(:utf7)
+    utf7.name = "é"
+    assert utf7.save
+    assert_equal "&AOk-", utf7.name_utf7
+  end
+
+  test "should store the given name already encoded in UTF7 without re-encoding it" do
+    utf7 = mailboxes(:utf7)
+    utf7.name_utf7 = "&AOk-"
+    assert utf7.save
+    assert_equal "&AOk-", utf7.name_utf7
   end
 end

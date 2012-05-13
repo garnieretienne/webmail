@@ -52,4 +52,13 @@ class Message < ActiveRecord::Base
   def as_json(options = {})
     super(options.merge(except: [ :mailbox_id, :flag_attr ], :methods => [ :flags ]))
   end
+
+  # Override the subject attribut to be decoded according to RFC 2047
+  # see: http://tools.ietf.org/html/rfc2047
+  # see: https://github.com/ConradIrwin/rfc2047-ruby
+  # TODO: this gem show a warning "iconv will be deprecated in the future, use String#encode instead."
+  def subject
+    subject = self.read_attribute(:subject)
+    Rfc2047.decode subject if subject
+  end
 end

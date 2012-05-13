@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'test_helper'
 
 class MessageTest < ActiveSupport::TestCase
@@ -132,5 +133,10 @@ class MessageTest < ActiveSupport::TestCase
   test "should return this message as read" do
     message = messages(:two)
     assert message.flagged?(:Seen), "this message is not masked as read but is"
+  end
+
+  test "should return the subject decoded using RFC2047" do
+    message = messages(:three)
+    assert_equal "Encoded using RFC2047 @é!", message.subject
   end
 end

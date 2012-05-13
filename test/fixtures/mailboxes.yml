@@ -15,3 +15,9 @@ hey:
   delimiter: /
   flag_attr:
   account: two
+
+utf7:
+  name: "&AMk-tudes"
+  delimiter: /
+  flag_attr: Hasnochildren
+  account: one
