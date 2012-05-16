@@ -14,20 +14,20 @@ class Api::MessagesControllerTest < ActionController::TestCase
 
   test "should return a list of messages for the given mailbox (in json)" do
     authenticate!
-    xhr :get, :index, format: :json, id: mailboxes(:inbox)
+    xhr :get, :index, format: :json, mailbox_id: mailboxes(:inbox).id
     assert_response :success
     assert_equal "webmail@yuweb.fr", json_response.first['from_address']
   end
 
   test "json model should return flags array" do
     authenticate!
-    xhr :get, :index, format: :json, id: mailboxes(:inbox)
+    xhr :get, :index, format: :json, mailbox_id: mailboxes(:inbox).id
     assert_equal ["Recent", "Seen"], json_response.first['flags']
   end
 
   test "json model should not return flag_attr and account_id" do
     authenticate!
-    xhr :get, :index, format: :json, id: mailboxes(:inbox)
+    xhr :get, :index, format: :json, mailbox_id: mailboxes(:inbox).id
     assert !json_response.first['flag_attr']
     assert !json_response.first['mailbox_id']
   end

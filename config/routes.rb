@@ -5,7 +5,9 @@ Webmail::Application.routes.draw do
 
   # API
   namespace :api do
-    resources :mailboxes
+    resources :mailboxes do
+      resources :messages
+    end
   end
 
   # Authentication

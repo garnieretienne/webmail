@@ -2,7 +2,7 @@
   - for mailbox in @mailboxes.models
     - if mailbox.selectable?()
       %li{class: "#{if mailbox.hasParent?() then 'child' else ''}"}
-        %a{href: "#"}
+        %a{href: "#mailboxes/#{mailbox.id}"}
           = mailbox.title()
           - if mailbox.hasChildren?()
             %a.dropdown-icon{href: "#"}

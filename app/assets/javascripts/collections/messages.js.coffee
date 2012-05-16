@@ -1,6 +1,15 @@
 Webmail.Collections.Messages = Backbone.Collection.extend
   model: Webmail.Models.Message
-  url: '/api/messages'
+
+  # Initialize
+  initialize: (models, options) ->
+    options || (options = {});
+    this.mailboxId = options.mailboxId
+
+  # Build the messages collection URL
+  # Use the mailbox id (RESTFUL)
+  url: ->
+    return "/api/mailboxes/#{this.mailboxId}/messages"
 
   # Sort the messages by UID
   comparator: (message1, message2) ->

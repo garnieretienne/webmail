@@ -8,7 +8,7 @@
     %th Subject
     %th Date
 - if @messages
-  - for message in @messages.models
+  - @messages.each (message) ->
     %tr{class: (if message.flagged?('Seen') then '' else 'new')}
       %td
         .hide-overflow
