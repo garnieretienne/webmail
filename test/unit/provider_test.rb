@@ -57,6 +57,12 @@ class ProviderTest < ActiveSupport::TestCase
     end
   end
 
+  test "should return an Net::IMAP object" do
+    imap = Provider.first.connect
+    assert_equal Net::IMAP, imap.class
+    assert imap.logout
+  end
+
   test "should return an error if the IMAP connection fail" do
   	provider = Provider.first
   	provider.imap_address = 'localhost'

@@ -47,40 +47,50 @@ class Account < ActiveRecord::Base
   #   account.connect do
   #     ... do your stuff ...
   #   end
+  # or
+  #   account = Account.find_by_email(email_address)
+  #   account.password = password
+  #   imap = account.connect
+  #   ... do your stuff ...
+  #   imap.logout
   def connect
-    self.provider.connect do |imap|
+    if block_given?
+      self.provider.connect do |imap|
+        imap.login(self.email_address, self.password)
+        yield imap
+      end
+    else
+      imap = self.provider.connect
       imap.login(self.email_address, self.password)
-      yield imap
+      return imap
     end
   end
 
   # Sync all mailboxes and messages from the IMAP server.
   # All removed mailboxes will be deleted from the cache and
   # all newly created mailboxes will be added to the cache.
-  def sync
+  def sync(imap)
 
     # Sync mailboxes
-    self.sync_mailboxes
+    self.sync_mailboxes(imap)
     self.reload
 
     # Sync messages
     self.mailboxes.each do |mailbox|
       next if mailbox.flagged? :Noselect
-      mailbox.sync self.password
+      mailbox.sync imap
     end
   end
 
   # Sync the mailbox list
-  def sync_mailboxes
+  def sync_mailboxes(imap)
     self.reload
 
     # Get the server mailboxes list and
     # build a map of flags
     mailboxes = Array.new
-    self.connect do |imap|
-      imap.list("", "*").each do |mailbox_data|
-        mailboxes << mailbox_data
-      end
+    imap.list("", "*").each do |mailbox_data|
+      mailboxes << mailbox_data
     end
     mailboxes_flags = Hash.new
     mailboxes.each do |mailbox_data|

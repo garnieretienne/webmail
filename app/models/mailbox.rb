@@ -60,10 +60,7 @@ class Mailbox < ActiveRecord::Base
   #     - get status for all old messages
   #     - for all cached messages: delete if no more present on the server OR update flags if have changed
   #     - insert all new messages into the database
-  def sync(imap_password)
-
-    # Load the IMAP account password in memory
-    self.account.password = imap_password
+  def sync(imap)
 
     # Find all messages UID
     cached_messages = self.messages.select([:uid, :flag_attr])
@@ -73,13 +70,9 @@ class Mailbox < ActiveRecord::Base
 
     # Ask the server for new messages and
     # ask the server for changes to old messages
-    new_messages = nil
-    old_messages = nil
-    self.account.connect do |imap|
-      imap.select self.name_utf7
-      new_messages = imap.uid_fetch(last_uid+1..-1, ["UID", "ENVELOPE", "FLAGS", "INTERNALDATE"])
-      old_messages = imap.uid_fetch(1..last_uid, ["UID", "FLAGS"]) if last_uid > 0
-    end
+    imap.select self.name_utf7
+    new_messages = imap.uid_fetch(last_uid+1..-1, ["UID", "ENVELOPE", "FLAGS", "INTERNALDATE"])
+    old_messages = imap.uid_fetch(1..last_uid, ["UID", "FLAGS"]) if last_uid > 0
 
     # Update cache for old messages
     if cached_messages

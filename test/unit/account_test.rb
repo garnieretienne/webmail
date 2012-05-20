@@ -47,18 +47,27 @@ class AccountTest < ActiveSupport::TestCase
     end
   end
 
+  test "should connect to the account provider server, authenticate on it, and return an Net::IMAP object" do
+    account = accounts(:one)
+    account.password = 'imnotstrong'
+    imap = account.connect 
+    assert_equal Net::IMAP, imap.class
+    assert imap.logout
+  end
+
   test "mailboxes synchronization" do
     account = accounts(:one)
     account.password = 'imnotstrong'
+    imap = account.connect
 
     # Should add this mailbox into the cache
     add_mailbox(accounts(:one).email_address, "Testing")
-    account.sync_mailboxes
+    account.sync_mailboxes imap
     assert_not_nil account.mailboxes.find_by_name("Testing")
 
     # Should remove this mailbox from the cache
     delete_mailbox(accounts(:one).email_address, "Testing")
-    account.sync_mailboxes
+    account.sync_mailboxes imap
     assert_nil account.mailboxes.find_by_name("Testing")
   end
 end

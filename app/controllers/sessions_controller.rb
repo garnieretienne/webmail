@@ -69,6 +69,9 @@ class SessionsController < ApplicationController
         # The account credentials are right, authenticate it
         flash.notice = "You successfully authenticated on '#{@account.provider.name}' as '#{@account.email_address}'."
         session[:account_id] = @account.id
+
+        # TODO: encrypt password
+        session[:password] = @account.password
       else
 
         # Redirect to the login page with an error message 
@@ -98,6 +101,9 @@ class SessionsController < ApplicationController
           @account.save
           flash.notice = "You successfully authenticated on '#{@account.provider.name}' as '#{@account.email_address}'."
           session[:account_id] = @account.id
+
+          # TODO: encrypt password
+          session[:password] = @account.password
         else
 
           # Redirect to the login page with an error message 

@@ -54,11 +54,14 @@ class MailboxTest < ActiveSupport::TestCase
   end
 
   test "messages synchronization" do
-    inbox = accounts(:one).mailboxes.find_by_name("INBOX")
+    account = accounts(:one)
+    account.password = "imnotstrong"
+    imap = account.connect
+    inbox = account.mailboxes.find_by_name("INBOX")
     
     # Should discover the new message
     subject = new_message(accounts(:one).email_address)
-    inbox.sync "imnotstrong"
+    inbox.sync imap
     message = inbox.messages.find_by_subject(subject)
     assert_not_nil message
     assert_equal subject, message.subject
@@ -66,13 +69,13 @@ class MailboxTest < ActiveSupport::TestCase
 
     # Should update the new message as read (flag: Seen)
     read_message accounts(:one).email_address, subject
-    inbox.sync "imnotstrong"
+    inbox.sync imap
     message = inbox.messages.find_by_subject(subject)
     assert message.flagged?(:Seen), "the message has not the :Seen tag"
 
     # Should remove the cached message (it was purged on the server)
     delete_message accounts(:one).email_address, subject
-    inbox.sync "imnotstrong"
+    inbox.sync imap
     message = inbox.messages.find_by_subject(subject)
     assert_nil message, "the message is not deleted"
   end

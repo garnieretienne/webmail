@@ -44,12 +44,19 @@ class Provider < ActiveRecord::Base
   #   provider.connect do |imap|
   #     imap.login(email_address, password)
   #   end
+  # or
+  #   provider = Provider.new(name: 'gmail', imap_address: 'imap.gmail.com', imap_port: '993', imap_ssl: true)
+  #   imap = provider.connect
+  #   imap.logout
   def connect
   	begin
       imap = Net::IMAP.new(self.imap_address, port: self.imap_port, ssl: self.imap_ssl)
-      yield imap
-      imap.logout
-      return true
+      if block_given?
+        yield imap
+        imap.logout
+      else
+        return imap
+      end
   	rescue Errno::ECONNREFUSED
   		return false
     rescue Errno::ETIMEDOUT
