@@ -102,7 +102,7 @@ class Account < ActiveRecord::Base
     cached_mailboxes = self.mailboxes
     cached_mailboxes_flags = Hash.new
     cached_mailboxes.each do |mailbox|
-      cached_mailboxes_flags[mailbox.name] = mailbox.flags
+      cached_mailboxes_flags[mailbox.name_utf7] = mailbox.flags
     end
 
     # Cache the new mailboxes, update mailboxes flags and
@@ -118,10 +118,10 @@ class Account < ActiveRecord::Base
     # Delete old mailboxes and update flags
     cached_mailboxes_flags.each do |name, flags|
       if !mailboxes_flags[name]
-        mailbox = self.mailboxes.find_by_name(name)
+        mailbox = self.mailboxes.find_by_name_in_utf7(name)
         mailbox.destroy
       elsif mailboxes_flags[name] != flags
-        mailbox = self.mailboxes.find_by_name(name)
+        mailbox = self.mailboxes.find_by_name_in_utf7(name)
         mailbox.flags = flags
         mailbox.save
       end

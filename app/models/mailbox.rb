@@ -143,6 +143,11 @@ class Mailbox < ActiveRecord::Base
     Mailbox.where(name: encoded_name).first
   end
 
+  # Add a find_by_name_in_utf7 method
+  def self.find_by_name_in_utf7(name)
+    Mailbox.where(name: name).first
+  end
+
   # Return the name encoded in utf7
   def name_utf7
     self.read_attribute(:name)
