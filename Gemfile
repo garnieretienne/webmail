@@ -2,9 +2,10 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
 gem 'jquery-rails'
-gem "haml-rails"         # Use haml for rails templates
-gem 'backbone-on-rails'  # Use backbone
-gem 'rfc2047'            # Decode / Encode message header using method described RFC2047
+gem "haml-rails"                                      # Use haml for rails templates
+gem 'backbone-on-rails'                               # Use backbone
+gem 'rfc2047'                                         # Decode / Encode message header using method described RFC2047
+gem 'mail', git: "https://github.com/mikel/mail.git"  # Work on email object
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

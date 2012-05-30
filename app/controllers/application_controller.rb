@@ -3,7 +3,13 @@ class ApplicationController < ActionController::Base
 
   # Helper to return the current authenticated account
   def current_account
-    Account.find(session[:account_id]) if session[:account_id]
+    if session[:account_id]
+      account = Account.find(session[:account_id]) if session[:account_id]
+      account.password = session[:password]
+      return account
+    else
+      return false
+    end
   end
   helper_method :current_account
 

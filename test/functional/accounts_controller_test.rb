@@ -4,8 +4,8 @@ class AccountsControllerTest < ActionController::TestCase
 
   # Method to fake authentication
   def authenticate
-    account = accounts(:one)
-    session[:account_id] = account.id
+    session[:account_id] = accounts(:one).id
+    session[:password] = 'imnotstrong'
   end
 
   test "should get show" do

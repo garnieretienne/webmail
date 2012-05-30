@@ -1,3 +1,4 @@
+# encoding: utf-8
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
@@ -36,6 +37,26 @@ class ActiveSupport::TestCase
         subject subject
         body "Testing ..."
       end
+      found = []
+      until !found.empty?
+        found = gmail.inbox.find(subject: subject)
+      end
+    end
+    return subject
+  end
+
+  # Send an email to the given account with a body encoding in UTF8
+  def new_encoded_message(address)
+    subject = Time.now.to_i.to_s
+    Gmail.connect(address, "imnotstrong") do |gmail|
+      mail= Mail.new
+      mail.charset = 'UTF-8'
+      mail.content_transfer_encoding = "8bit"
+      mail.to = address
+      mail.subject = subject
+      mail.body = "éééé"
+      mail.from = "testing@gmail.com"
+      status = mail.deliver
       found = []
       until !found.empty?
         found = gmail.inbox.find(subject: subject)

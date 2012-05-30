@@ -1,4 +1,13 @@
 $font-color: #464646;
+$border-color: #E4E4E4;
+
+@mixin from-address {
+  .from-address {
+    font-weight: normal;
+    color: transparentize($font-color, 0.4);
+    padding-left: 0.4em;
+  }
+}
 
 #mailboxes {
   cursor: default;
@@ -12,7 +21,7 @@ $font-color: #464646;
   ul {
     list-style-type: none;
     margin: 0;
-    border-right: 1px solid #E4E4E4;
+    border-right: 1px solid $border-color;
     li {
       padding: 0.2em 0.2em;
       .dropdown-icon {
@@ -40,11 +49,7 @@ $font-color: #464646;
     }
     td {
       cursor: pointer;
-      .from-address {
-        font-weight: normal;
-        color: transparentize($font-color, 0.4);
-        padding-left: 0.4em;
-      }
+      @include from-address;
       .hide-overflow {
         white-space: nowrap;
         overflow: hidden;
@@ -64,6 +69,25 @@ $font-color: #464646;
     }
     .date {
       width: 10em;
+    }
+  }
+
+  #body {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+  }
+
+  #header {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid $border-color;
+    .field {
+      @include from-address;
+      .title {
+        margin-right: 0.4em;
+        font-weight: bold;
+      }
     }
   }
 }

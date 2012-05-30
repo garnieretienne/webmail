@@ -1,4 +1,4 @@
-Webmail.Routers.Mailboxes = Backbone.Router.extend
+Webmail.Routers.App = Backbone.Router.extend
   initialize: (data) ->
     this.mailboxes = data.mailboxes
     this.messages  = data.messages
@@ -6,6 +6,7 @@ Webmail.Routers.Mailboxes = Backbone.Router.extend
   routes:
     "": "index"
     "mailboxes/:id": "show"
+    "mailboxes/:mailboxId/messages/:id": "showMessage"
 
   # Show the inbox view with populated data
   index: ->
@@ -27,3 +28,14 @@ Webmail.Routers.Mailboxes = Backbone.Router.extend
       success: ->
         $('#mailboxes').html mailboxesView.render().$el
         $('#messages').html messagesView.render().$el
+
+  # Display a message
+  # TODO: work when enter the new URL without navigation
+  showMessage: (mailboxId, id) ->
+    #this.messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
+    message = this.messages.get(id)
+    messageView = new Webmail.Views.MessagesShow
+      model: message
+    message.fetch
+      success: ->
+        $('#messages').html messageView.render().$el

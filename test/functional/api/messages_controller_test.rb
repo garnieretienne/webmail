@@ -5,6 +5,7 @@ class Api::MessagesControllerTest < ActionController::TestCase
   # Method to simulate the user authentification
   def authenticate!
     session[:account_id] = accounts(:one).id
+    session[:password] = 'imnotstrong'
   end
 
   test "should return a forbidden action trying to use the api without being authenticated before" do
@@ -28,7 +29,14 @@ class Api::MessagesControllerTest < ActionController::TestCase
   test "json model should not return flag_attr and account_id" do
     authenticate!
     xhr :get, :index, format: :json, mailbox_id: mailboxes(:inbox).id
-    assert !json_response.first['flag_attr']
-    assert !json_response.first['mailbox_id']
+    assert !json_response.first['flag_attr'], "the json response contain the flag_attr"
+    assert !json_response.first['body'], "the json response contain the message body"
+  end
+
+  test "the json elements of a message (on show)" do
+    authenticate!
+    xhr :get, :show, format: :json, mailbox_id: mailboxes(:inbox).id, id: messages(:one).id
+    assert_response :success
+    assert json_response['subject'], "the json response contain the message subject"
   end
 end

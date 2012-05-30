@@ -15,7 +15,7 @@ Webmail.Models.Message = Backbone.Model.extend
       this.get('from_address').split('@')[0]
 
   # Return the internaldate in short format
-  # 2012-05-08T12:19:33Z => 
+  # 2012-05-08T12:19:33Z => 08 Mai 2012
   shortInternalDate: ->
     monthNames = [ 
       "January"
@@ -36,3 +36,7 @@ Webmail.Models.Message = Backbone.Model.extend
     short = date.getDate()+" "+monthNames[date.getMonth()]
     short += " "+date.getFullYear() if currentDate.getFullYear() != date.getFullYear()
     return short
+
+  # Display the message
+  display: ->
+    Backbone.history.navigate("mailboxes/#{this.get("mailbox_id")}/messages/#{this.get("id")}", {trigger: true});

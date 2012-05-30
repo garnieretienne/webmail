@@ -1,0 +1,13 @@
+#header
+  .field
+    %span.title From:
+    = " #{@message.fromName()}" 
+    %span.from-address= "<#{@message.get("from_address")}>"
+  .field 
+    %span.title Date:
+    = @message.get "internal_date"
+  .field 
+    %span.title Subject:
+    = @message.get "subject"
+%pre#body
+  = @message.get "body"

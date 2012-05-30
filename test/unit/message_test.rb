@@ -139,4 +139,48 @@ class MessageTest < ActiveSupport::TestCase
     message = messages(:three)
     assert_equal "Encoded using RFC2047 @é!", message.subject
   end
+
+  test "should get the body of an existing message" do
+    # create a new message
+    account = accounts(:one)
+    account.password = "imnotstrong"
+    imap = account.connect
+    inbox = account.mailboxes.find_by_name("INBOX")
+    subject = new_message(accounts(:one).email_address)
+
+    # synchronize the mailbox
+    inbox.sync imap
+
+    # try to get the body of the cached message
+    message = inbox.messages.find_by_subject subject
+    message.get_body! imap
+
+    assert_equal "Testing ...", message.body
+
+    # delete the message from the mailbox
+    delete_message accounts(:one).email_address, subject
+    imap.logout
+  end
+
+  test "encoding on message body" do
+    # create a new message
+    account = accounts(:one)
+    account.password = "imnotstrong"
+    imap = account.connect
+    inbox = account.mailboxes.find_by_name("INBOX")
+    subject = new_encoded_message(accounts(:one).email_address)
+
+    # synchronize the mailbox
+    inbox.sync imap
+
+    # try to get the body of the cached message
+    message = inbox.messages.find_by_subject subject
+    message.get_body! imap
+
+    assert_equal "éééé", message.body
+
+    # delete the message from the mailbox
+    delete_message accounts(:one).email_address, subject
+    imap.logout
+  end
 end
