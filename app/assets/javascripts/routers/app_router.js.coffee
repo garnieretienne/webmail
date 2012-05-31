@@ -19,18 +19,6 @@ Webmail.Routers.App = Backbone.Router.extend
 
   # Show the content of a specific mailbox
   show: (id) ->
-    this.messages = new Webmail.Collections.Messages({}, mailboxId: id)
-    mailboxesView = new Webmail.Views.MailboxesIndex
-      collection: this.mailboxes
-    messagesView  = new Webmail.Views.MessagesIndex
-      collection: this.messages
-    this.messages.fetch
-      success: ->
-        $('#mailboxes').html mailboxesView.render().$el
-        $('#messages').html messagesView.render().$el
-
-  # Display a message
-  showMessage: (mailboxId, id) ->
 
     # Check if mailboxes are already displayed (navigation),
     # if not (direct access), render them.
@@ -39,15 +27,49 @@ Webmail.Routers.App = Backbone.Router.extend
         collection: this.mailboxes
       $('#mailboxes').html mailboxesView.render().$el
 
-    # Fetch all messages from the mailboxes if not already fetched
-    messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
-    messages.fetch
+    # Fetch all messages from the mailbox
+    # and render the index view
+    this.messages = new Webmail.Collections.Messages({}, mailboxId: id)
+    messagesView  = new Webmail.Views.MessagesIndex
+      collection: this.messages
+    this.messages.fetch
       success: ->
-        message = messages.get(id)
+        $('#messages').html messagesView.render().$el
 
-        # Display the message
-        messageView = new Webmail.Views.MessagesShow
-          model: message
-        message.fetch
-          success: ->
-            $('#messages').html messageView.render().$el
+  # Display a message
+  showMessage: (mailboxId, id) ->
+    # Accessors
+    messages = this.messages
+    message = null
+
+    # Check if mailboxes are already displayed (navigation),
+    # if not (direct access), render them.
+    if $('#mailboxes').html() == ""
+      mailboxesView = new Webmail.Views.MailboxesIndex
+        collection: this.mailboxes
+      $('#mailboxes').html mailboxesView.render().$el
+
+    # Fetch all messages from this messages collection is not already loaded
+    if messages.mailboxId != mailboxId
+      messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
+      messages.fetch
+        success: ->
+          message = messages.get(id)
+
+          # Display the message
+          messageView = new Webmail.Views.MessagesShow
+            model: message
+          message.fetch
+            success: ->
+              $('#messages').html messageView.render().$el
+    
+    # If messages collection is already loaded, display the message
+    else
+      message = messages.get(id)
+
+      # Display the message
+      messageView = new Webmail.Views.MessagesShow
+        model: message
+      message.fetch
+        success: ->
+          $('#messages').html messageView.render().$el
