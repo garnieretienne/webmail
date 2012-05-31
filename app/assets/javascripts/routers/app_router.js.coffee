@@ -30,12 +30,24 @@ Webmail.Routers.App = Backbone.Router.extend
         $('#messages').html messagesView.render().$el
 
   # Display a message
-  # TODO: work when enter the new URL without navigation
   showMessage: (mailboxId, id) ->
-    #this.messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
-    message = this.messages.get(id)
-    messageView = new Webmail.Views.MessagesShow
-      model: message
-    message.fetch
+
+    # Check if mailboxes are already displayed (navigation),
+    # if not (direct access), render them.
+    if $('#mailboxes').html() == ""
+      mailboxesView = new Webmail.Views.MailboxesIndex
+        collection: this.mailboxes
+      $('#mailboxes').html mailboxesView.render().$el
+
+    # Fetch all messages from the mailboxes if not already fetched
+    messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
+    messages.fetch
       success: ->
-        $('#messages').html messageView.render().$el
+        message = messages.get(id)
+
+        # Display the message
+        messageView = new Webmail.Views.MessagesShow
+          model: message
+        message.fetch
+          success: ->
+            $('#messages').html messageView.render().$el
