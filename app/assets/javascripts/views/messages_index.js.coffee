@@ -3,10 +3,10 @@ Webmail.Views.MessagesIndex = Backbone.View.extend
   className: "table table-condensed table-striped"
 
   events:
-    "click .message": "show_message"
+    "click .message": "showMessage"
 
   # Display the selected message
-  show_message: (e) ->
+  showMessage: (e) ->
     id = $(e.currentTarget).attr("data-id")
     this.collection.get(id).display()
 

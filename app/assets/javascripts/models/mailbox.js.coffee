@@ -1,5 +1,9 @@
 Webmail.Models.Mailbox = Backbone.Model.extend
 
+  # On mailbox initialization, add a selected attribute to false
+  initialize: ->
+    this.set "selected", false
+
   # Return a boolean
   # Test if the mailbox has the given flag
   flagged: (flag) ->
@@ -32,11 +36,24 @@ Webmail.Models.Mailbox = Backbone.Model.extend
   selectable: ->
     !this.flagged? "Noselect"
 
+  # Display the display name (title) of the mailbox
   title: ->
     if this.hasParent()
       return this.get("name").split(this.get("delimiter"))[1]
     else
       return this.get "name"
 
+  # Select the mailbox
+  select: ->
+    # Unmark any pre-selected mailbox
+    selected = this.collection.where 
+      selected: true
+    _.each selected, (mailbox) ->
+      mailbox.set "selected", false
 
-  
+    # Mask this mailbox as selected
+    this.set "selected", true
+
+  # Display the message list
+  display: ->
+    Backbone.history.navigate("mailboxes/#{this.id}", {trigger: true});

@@ -13,23 +13,27 @@ $border-color: #E4E4E4;
   cursor: default;
   color: transparentize($font-color, 0.4);
   font-weight: bold;
-  a {
-    font-weight: normal;
-    cursor: pointer;
-    color: $font-color;
-  }
   ul {
     list-style-type: none;
     margin: 0;
     border-right: 1px solid $border-color;
     li {
       padding: 0.2em 0.2em;
+      a {
+        font-weight: normal;
+        cursor: pointer;
+        color: $font-color;
+      }
       .dropdown-icon {
         margin-left: 0.4em;
       }
-    }
-    li.child {
-      padding-left: 1em;
+      &.child {
+        padding-left: 1em;
+      }
+      &.selected a {
+        font-weight: bolder;
+        color: black;
+      }
     }
   }
 }

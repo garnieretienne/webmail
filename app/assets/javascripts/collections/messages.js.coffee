@@ -4,7 +4,7 @@ Webmail.Collections.Messages = Backbone.Collection.extend
   # Initialize
   initialize: (models, options) ->
     options || (options = {});
-    this.mailboxId = options.mailboxId
+    this.mailboxId = options.mailboxId || null
 
   # Build the messages collection URL
   # Use the mailbox id (RESTFUL)

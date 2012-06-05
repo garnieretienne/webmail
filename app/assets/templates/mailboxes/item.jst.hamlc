@@ -1,0 +1,11 @@
+- if @mailbox.selectable?()
+  %a{href: "#"}
+    = @mailbox.title()
+    - if @mailbox.hasChildren?()
+      %a.dropdown-icon{href: "#"}
+        .icon-chevron-down
+- else
+  = @mailbox.title()
+  - if @mailbox.hasChildren?()
+    %a.dropdown-icon{href: "#"}
+      .icon-chevron-down

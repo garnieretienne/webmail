@@ -12,6 +12,7 @@ Webmail.Routers.App = Backbone.Router.extend
   index: ->
     mailboxesView = new Webmail.Views.MailboxesIndex
       collection: this.mailboxes
+      currentMailbox: this.messages.mailboxId
     messagesView  = new Webmail.Views.MessagesIndex
       collection: this.messages
     $('#mailboxes').html mailboxesView.render().$el
@@ -25,6 +26,7 @@ Webmail.Routers.App = Backbone.Router.extend
     if $('#mailboxes').html() == ""
       mailboxesView = new Webmail.Views.MailboxesIndex
         collection: this.mailboxes
+        currentMailbox: id
       $('#mailboxes').html mailboxesView.render().$el
 
     # Fetch all messages from the mailbox
@@ -47,6 +49,7 @@ Webmail.Routers.App = Backbone.Router.extend
     if $('#mailboxes').html() == ""
       mailboxesView = new Webmail.Views.MailboxesIndex
         collection: this.mailboxes
+        currentMailbox: mailboxId
       $('#mailboxes').html mailboxesView.render().$el
 
     # Fetch all messages from this messages collection is not already loaded

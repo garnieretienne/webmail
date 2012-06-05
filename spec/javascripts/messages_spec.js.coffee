@@ -1,5 +1,9 @@
 #= require 'application'
 
+################################
+# Helpers
+################################
+
 # List of messages
 messages_sample = [
   {id: 1, uid: 9, from_address: "user@domain.tld", from_name: null, subject: "Test", internal_date: "2012-05-15T15:09:48Z",  flags: []}
@@ -13,6 +17,62 @@ messages_sample = [
 # One message
 message_sample = (n) ->
   return messages_sample[n-1]
+
+################################
+# Models
+################################
+
+# Test the Message model
+describe "Webmail.Models.Message", ->
+
+  # Test the message flags
+  it "should return boolean for a flag presence", ->
+    message = new Webmail.Models.Message(message_sample 4)
+    expect(message.flagged?("Seen")).toBe true
+    message = new Webmail.Models.Message(message_sample 1)
+    expect(message.flagged?("Seen")).toBe false
+
+  # Test the 'from' field name display
+  it "should return the from name if exist or a splitted mail address", ->
+    message = new Webmail.Models.Message(message_sample 3)
+    expect(message.fromName()).toBe "Curt Cobain"
+    message = new Webmail.Models.Message(message_sample 1)
+    expect(message.fromName()).toBe "user"
+
+  # Test date display
+  it "should return a short format of the internal date", ->
+    message = new Webmail.Models.Message(message_sample 1)
+    expect(message.shortInternalDate()).toBe "15 May"
+    message = new Webmail.Models.Message(message_sample 6)
+    expect(message.shortInternalDate()).toBe "9 May 2011"
+
+################################
+# Collections
+################################
+
+# Test the messages collection
+describe "Webmail.Collections.Messages", ->
+
+  # Test a collection with no mailbox id
+  it "should return an empty mailbox id", ->
+    messages = new Webmail.Collections.Messages messages_sample
+    expect(messages.mailboxId).toBe null
+
+  # Test a collection with a mailbox id
+  it "should return an mailbox id and a correct url", ->
+    messages = new Webmail.Collections.Messages messages_sample, mailboxId: 1
+    expect(messages.mailboxId).toBe 1
+    expect(messages.url()).toBe "/api/mailboxes/1/messages"
+
+  # Test the comparator method
+  it "should order the message list by uid", ->
+    messages = new Webmail.Collections.Messages messages_sample
+    expect(messages.comparator(messages.get(1), messages.get(5))).toBe -1
+    expect(messages.comparator(messages.get(6), messages.get(2))).toBe 1
+
+################################
+# Views
+################################
 
 # Test the messages index view
 describe "Webmail.Views.MessagesIndex", ->
@@ -30,9 +90,9 @@ describe "Webmail.Views.MessagesIndex", ->
     messages = new Webmail.Collections.Messages messages_sample
     view = new Webmail.Views.MessagesIndex collection: messages
     view.render()
-    expect(view.$el).toBe "table" 
-    expect(view.$el).toContain "tr" 
-    expect(view.$el).toHaveText /user@domain.tld/ 
+    expect(view.$el).toBe "table"
+    expect(view.$el).toContain "tr"
+    expect(view.$el).toHaveText /user@domain.tld/
     expect(view.$el).toHaveText /kurt@nirvana.com/
 
   # Test the messages order
@@ -50,23 +110,18 @@ describe "Webmail.Views.MessagesIndex", ->
     expect(messages[1]).toHaveText /user@domain.tld/
     expect(messages[0]).toHaveText /hi@black.com/
 
-# Test the Message model
-describe "Webmail.Models.Message", ->
+# Test message show view
+describe "Webmail.Views.MessagesShow", ->
 
-  it "should return boolean for a flag presence", ->
-    message = new Webmail.Models.Message(message_sample 4)
-    expect(message.flagged?("Seen")).toBe true
-    message = new Webmail.Models.Message(message_sample 1)
-    expect(message.flagged?("Seen")).toBe false
-
-  it "should return the from name if exist or a splitted mail address", ->
-    message = new Webmail.Models.Message(message_sample 3)
-    expect(message.fromName()).toBe "Curt Cobain"
-    message = new Webmail.Models.Message(message_sample 1)
-    expect(message.fromName()).toBe "user"
-
-  it "should return a short format of the internal date", ->
-    message = new Webmail.Models.Message(message_sample 1)
-    expect(message.shortInternalDate()).toBe "15 May"
-    message = new Webmail.Models.Message(message_sample 6)
-    expect(message.shortInternalDate()).toBe "9 May 2011"
+  # Test the displaying of a single message
+  it "should display the view of an individual message", ->
+    messages = new Webmail.Collections.Messages messages_sample
+    message = messages.get(3)
+    message.set 'body', 'Hello there'
+    view = new Webmail.Views.MessagesShow model: message
+    view.render()
+    expect(view.$el).toBe "div"
+    expect(view.$el).toHaveText /Hello there/
+    expect(view.$el).toHaveText /Curt Cobain/
+    expect(view.$el).toHaveText /kurt@nirvana.com/
+    expect(view.$el).toHaveText /Test/
