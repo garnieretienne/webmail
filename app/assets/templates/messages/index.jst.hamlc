@@ -7,20 +7,3 @@
     %th From
     %th Subject
     %th Date
-- if @messages
-  - @messages.each (message) ->
-    %tr{class: (if message.flagged?('Seen') then 'message' else 'message new'), data-id: message.id}
-      %td
-        .hide-overflow
-          = message.fromName()
-          %span.from-address
-            = message.get "from_address"
-      %td
-        .hide-overflow
-          - if message.get("subject") == null
-            %span.no-subject= "No subject ..."
-          - else
-            = message.get "subject"
-      %td
-        .hide-overflow
-          = message.shortInternalDate()

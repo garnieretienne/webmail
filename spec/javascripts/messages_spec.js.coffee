@@ -110,6 +110,21 @@ describe "Webmail.Views.MessagesIndex", ->
     expect(messages[1]).toHaveText /user@domain.tld/
     expect(messages[0]).toHaveText /hi@black.com/
 
+  # Test child view update on collection change
+  it "should update child model", ->
+    messagesCollection = new Webmail.Collections.Messages messages_sample
+    view = new Webmail.Views.MessagesIndex collection: messagesCollection
+    view.render()
+    messages = _.map view.$el.children("tbody").children("tr"), (tr) ->
+      $(tr)
+    expect(messages[0].hasClass('new')).toBe false
+    expect(messages[1].hasClass('new')).toBe true
+    message = messagesCollection.get 1
+    message.set "flags", ["Seen"]
+    messages = _.map view.$el.children("tbody").children("tr"), (tr) ->
+      $(tr)
+    expect(messages[1].hasClass('new')).toBe false
+
 # Test message show view
 describe "Webmail.Views.MessagesShow", ->
 
@@ -125,3 +140,24 @@ describe "Webmail.Views.MessagesShow", ->
     expect(view.$el).toHaveText /Curt Cobain/
     expect(view.$el).toHaveText /kurt@nirvana.com/
     expect(view.$el).toHaveText /Test/
+
+# Test message item view
+describe "Webmail.Views.MessagesItem", ->
+
+  # should render a single message with its associed class
+  it "should render a single message with its associed class", ->
+    message = new Webmail.Models.Message(message_sample 1)
+    messageView = new Webmail.Views.MessagesItem
+      model: message
+    messageView.render()
+    expect(messageView.$el).toBe "tr"
+    expect(messageView.$el.hasClass('message')).toBe true
+    expect(messageView.$el.hasClass('new')).toBe true
+
+    message = new Webmail.Models.Message(message_sample 2)
+    messageView = new Webmail.Views.MessagesItem
+      model: message
+    messageView.render()
+    expect(messageView.$el).toBe "tr"
+    expect(messageView.$el.hasClass('message')).toBe true
+    expect(messageView.$el.hasClass('new')).toBe false

@@ -32,7 +32,7 @@ Webmail.Views.MailboxesIndex = Backbone.View.extend
     $(this.$el).append(mailboxView.render().$el)
 
   # Re-render an updated mailbox
-  updateChild: (mailbox, options) ->
+  updateChild: (mailbox) ->
     mailboxView = new Webmail.Views.MailboxesItem
       model: mailbox
     $(this.$el).children("[data-id=#{mailbox.id}]").replaceWith(mailboxView.render().$el)

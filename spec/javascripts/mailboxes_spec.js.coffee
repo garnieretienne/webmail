@@ -164,32 +164,32 @@ describe "Webmail.Views.MailboxesIndex", ->
 describe "Webmail.Views.MailboxesItem", ->
 
   # should render a single mailbox view with its associed class
-    it "should render a single mailbox view with its associed class", ->
-      mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
-      mailboxView = new Webmail.Views.MailboxesItem
-        model: mailbox
-      mailboxView.render()
-      expect(mailboxView.$el).toBe "li"
-      expect(mailboxView.$el.hasClass('mailbox')).toBe true
-      expect(mailboxView.$el.hasClass('child')).toBe false
-      expect(mailboxView.$el.hasClass('selected')).toBe false
+  it "should render a single mailbox view with its associed class", ->
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 1)
+    mailboxView = new Webmail.Views.MailboxesItem
+      model: mailbox
+    mailboxView.render()
+    expect(mailboxView.$el).toBe "li"
+    expect(mailboxView.$el.hasClass('mailbox')).toBe true
+    expect(mailboxView.$el.hasClass('child')).toBe false
+    expect(mailboxView.$el.hasClass('selected')).toBe false
 
-      mailboxes = new Webmail.Collections.Mailboxes mailboxes_sample
-      mailbox = mailboxes.get(1)
-      mailbox.select()
-      mailboxView = new Webmail.Views.MailboxesItem
-        model: mailbox
-      mailboxView.render()
-      expect(mailboxView.$el).toBe "li"
-      expect(mailboxView.$el.hasClass('mailbox')).toBe true
-      expect(mailboxView.$el.hasClass('child')).toBe false
-      expect(mailboxView.$el.hasClass('selected')).toBe true
+    mailboxes = new Webmail.Collections.Mailboxes mailboxes_sample
+    mailbox = mailboxes.get(1)
+    mailbox.select()
+    mailboxView = new Webmail.Views.MailboxesItem
+      model: mailbox
+    mailboxView.render()
+    expect(mailboxView.$el).toBe "li"
+    expect(mailboxView.$el.hasClass('mailbox')).toBe true
+    expect(mailboxView.$el.hasClass('child')).toBe false
+    expect(mailboxView.$el.hasClass('selected')).toBe true
 
-      mailbox = new Webmail.Models.Mailbox(mailbox_sample 7)
-      mailboxView = new Webmail.Views.MailboxesItem
-        model: mailbox
-      mailboxView.render()
-      expect(mailboxView.$el).toBe "li"
-      expect(mailboxView.$el.hasClass('mailbox')).toBe true
-      expect(mailboxView.$el.hasClass('child')).toBe true
-      expect(mailboxView.$el.hasClass('selected')).toBe false
+    mailbox = new Webmail.Models.Mailbox(mailbox_sample 7)
+    mailboxView = new Webmail.Views.MailboxesItem
+      model: mailbox
+    mailboxView.render()
+    expect(mailboxView.$el).toBe "li"
+    expect(mailboxView.$el.hasClass('mailbox')).toBe true
+    expect(mailboxView.$el.hasClass('child')).toBe true
+    expect(mailboxView.$el.hasClass('selected')).toBe false
