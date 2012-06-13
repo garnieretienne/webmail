@@ -53,7 +53,7 @@ Webmail.Routers.App = Backbone.Router.extend
       $('#mailboxes').html mailboxesView.render().$el
 
     # Fetch all messages from this messages collection is not already loaded
-    if messages.mailboxId != mailboxId
+    if parseInt(messages.mailboxId) != parseInt(mailboxId)
       messages = new Webmail.Collections.Messages({}, mailboxId: mailboxId)
       messages.fetch
         success: ->
@@ -62,9 +62,8 @@ Webmail.Routers.App = Backbone.Router.extend
           # Display the message
           messageView = new Webmail.Views.MessagesShow
             model: message
-          message.fetch
-            success: ->
-              $('#messages').html messageView.render().$el
+          $('#messages').html messageView.render().$el
+          message.fetch()
     
     # If messages collection is already loaded, display the message
     else
@@ -73,6 +72,5 @@ Webmail.Routers.App = Backbone.Router.extend
       # Display the message
       messageView = new Webmail.Views.MessagesShow
         model: message
-      message.fetch
-        success: ->
-          $('#messages').html messageView.render().$el
+      $('#messages').html messageView.render().$el
+      message.fetch()
