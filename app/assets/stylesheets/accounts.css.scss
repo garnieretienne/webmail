@@ -9,6 +9,20 @@ $border-color: #E4E4E4;
   }
 }
 
+#controls {
+  
+  margin-bottom: 1em;
+  .btn {
+    width: 100%;
+
+  }
+  .btn-small {
+    border: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
 #mailboxes {
   cursor: default;
   color: transparentize($font-color, 0.4);

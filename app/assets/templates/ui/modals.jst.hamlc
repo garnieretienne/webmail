@@ -1,0 +1,8 @@
+/ Synchronization modal
+#sync-modal.modal.hide
+  .modal-header
+    %h4 Syncing ...
+  .modal-body
+    %img{'src' = 'images/loader.gif', 'alt' = 'Loading...'}
+  .modal-footer
+    %p This could take some time ...

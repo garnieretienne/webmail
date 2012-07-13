@@ -6,6 +6,7 @@ gem "haml-rails"                                      # Use haml for rails templ
 gem 'backbone-on-rails'                               # Use backbone
 gem 'rfc2047'                                         # Decode / Encode message header using method described RFC2047
 gem 'mail', git: "https://github.com/mikel/mail.git"  # Work on email object
+gem 'thin'                                            # Ruby server
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

@@ -17,6 +17,16 @@ class AccountsControllerTest < ActionController::TestCase
   test "should be redirected to the login page if not authenticated" do
     get :show
     assert_response :redirect
+    get :sync
+    assert_response :redirect
+  end
+
+  test "should synchronize the current account state with the server" do
+    authenticate
+    assert_equal 3, accounts(:one).mailboxes.count
+    get :sync
+    assert_response :success
+    assert_equal 11, assigns(:account).mailboxes.count
   end
 
 end

@@ -16,7 +16,7 @@ Goal: User must be able to read his messages accessed throught IMAP on his email
   - custom mailboxes: mailboxes created by the user himself, like 'Personnal' and 'Work' mailboxes
 
 * user must be able to synchronize the email list with the server (IMAP server -> webmail)
-  - this action must be perfommed on login or on demand
+  - this action must be perfommed on demand
   - during synchronization, all changes since the last synchronization on the server must be replicated in the webmail
   - during the synchronization, these messages attributes are cached:
     * Unique Identifier (UID)
@@ -36,5 +36,5 @@ Goal: User must be able to read his messages accessed throught IMAP on his email
   
 * user must be able to read a message when opened it
   - the message content must be loaded from the server and displayed to the user
-  - the message must be displayed in HTML if possible, or in TXT if not
+  - the message must be displayed in TXT format
   - in HTML display mode, no stylesheets nor javascripts must be loaded from the message body

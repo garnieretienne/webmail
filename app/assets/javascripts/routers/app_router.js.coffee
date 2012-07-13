@@ -3,10 +3,19 @@ Webmail.Routers.App = Backbone.Router.extend
     this.mailboxes = data.mailboxes
     this.messages  = data.messages
 
+    # Display UI elements like synchronize button
+    this.displayUI()
+
   routes:
     "": "index"
     "mailboxes/:id": "show"
     "mailboxes/:mailboxId/messages/:id": "showMessage"
+
+  # Display UI elements like account's actions buttons
+  # or modals contents
+  displayUI: ->
+    UIView = new Webmail.Views.UI()
+    $('#controls').html UIView.render().$el
 
   # Show the inbox view with populated data
   index: ->

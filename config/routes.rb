@@ -5,6 +5,7 @@ Webmail::Application.routes.draw do
 
   # API
   namespace :api do
+    get 'sync', to: 'accounts#sync', as: 'synchronize_account'
     resources :mailboxes do
       resources :messages
     end
